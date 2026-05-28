@@ -6,12 +6,15 @@ from sklearn.metrics import accuracy_score
 import mlflow
 import mlflow.sklearn
 
-# untuk local testing
+
 # mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
 mlflow.sklearn.autolog()
 
 df = pd.read_csv("dataset_preprocessing.csv")
+
+df = df.drop(columns=["Name", "Ticket"])
+
 
 X = df.drop("Survived", axis=1)
 y = df["Survived"]
@@ -38,12 +41,5 @@ with mlflow.start_run():
     acc = accuracy_score(y_test, y_pred)
 
     print("Accuracy:", acc)
-
-    mlflow.log_metric("accuracy", acc)
-
-    mlflow.sklearn.log_model(
-        sk_model=model,
-        artifact_path="model"
-    )
 
 print("Training selesai")
